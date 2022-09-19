@@ -15,5 +15,66 @@ model User {
   email    String @unique
   password String
 
-  @@map("user")
+  @@map("users")
+}
+
+
+model Category {
+  id       Int    @id @default(autoincrement())
+  name    String @unique
+
+  test Test[]
+
+  @@map("categories")
+}
+
+model Term {
+  id       Int    @id @default(autoincrement())
+  number    Int
+
+  discipline Discipline[]
+
+  @@map("terms")
+}
+
+model Discipline {
+  id       Int    @id @default(autoincrement())
+  name    String @unique
+  term Term @relation(fields: [termId], references: [id])
+  termId Int
+
+  teacherDiscipline TearcherDiscipline[]
+  @@map("disciplines")
+}
+
+model Teacher {
+  id Int @id @default(autoincrement())
+  name String @unique
+
+  teacherDiscipline TearcherDiscipline[]
+  @@map("teachers")
+}
+
+model TearcherDiscipline {
+  id       Int    @id @default(autoincrement())
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+  teacherId    Int
+  discipline Discipline @relation(fields: [disciplineId], references: [id])
+  disciplineId Int
+
+  test Test[]
+  @@map("teachersDisciplines")
+}
+
+
+model Test {
+  id       Int    @id @default(autoincrement())
+  name    String 
+  pdfUrl String
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  teacherDiscipline TearcherDiscipline @relation(fields: [teacherDisciplineId], references: [id])
+  teacherDisciplineId Int
+
+  @@map("tests")
 }
